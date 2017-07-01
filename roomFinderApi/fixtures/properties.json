@@ -1,0 +1,66 @@
+[
+{
+    "model": "properties.propertytype",
+    "pk": 1,
+    "fields": {
+        "name": "Home"
+    }
+},
+{
+    "model": "properties.propertytype",
+    "pk": 2,
+    "fields": {
+        "name": "Apartment"
+    }
+},
+{
+    "model": "properties.propertytype",
+    "pk": 3,
+    "fields": {
+        "name": "Shop"
+    }
+},
+{
+    "model": "properties.propertytype",
+    "pk": 4,
+    "fields": {
+        "name": "Office"
+    }
+},
+{
+    "model": "properties.propertytype",
+    "pk": 5,
+    "fields": {
+        "name": "Land"
+    }
+},
+{
+    "model": "properties.category",
+    "pk": 1,
+    "fields": {
+        "title": "Home",
+        "property_type": 1
+    }
+},
+{
+    "model": "properties.property",
+    "pk": 1,
+    "fields": {
+        "owner": 1,
+        "address": "Koteshwor",
+        "state": "Bagmati",
+        "city": "Kathmandu",
+        "district": "Kathmandu",
+        "property_type": 1,
+        "category": 1,
+        "rooms": 5,
+        "util_area": 800,
+        "total_area": 1900,
+        "title": "Flat in Koteshwor",
+        "image": "img/room4.jpg",
+        "description": "Description on the room you are listing",
+        "rent_price": "25000.0000000000",
+        "timestamp": "2017-06-17T14:45:53.822Z"
+    }
+}
+]
