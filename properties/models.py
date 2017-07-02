@@ -60,7 +60,7 @@ class Property(models.Model):
     rent_price = models.DecimalField(
         _('Property Value'),
         max_digits=19,
-        decimal_places=4
+        decimal_places=2
     )
     location = gis_models.PointField(blank=True, null=True, geography=True)
     prefered_radius = models.IntegerField(default=5, help_text="in kilometers")
@@ -76,3 +76,15 @@ class Property(models.Model):
 
     def __str__(self):
         return self.title
+
+class Gallery(models.Model):
+    property_instance = models.ForeignKey(Property, related_name="gallery")
+    caption = models.CharField(null=True, blank=True, max_length=80)
+    image = models.ImageField(upload_to="properties/rooms/")
+
+    class Meta:
+        verbose_name = ("Gallery")
+        verbose_name_plural = ("Galleries")
+
+    def __str__(self):
+        return self.image.name

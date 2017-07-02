@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.db.models import Q
 
 # rest_framework
+from rest_framework.parsers import FormParser, MultiPartParser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
@@ -18,9 +19,9 @@ from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework import status
 
-from .serializers import PropertySerializer
+from .serializers import PropertySerializer, GallerySerializer
 from .utils.pagination import ResultInPagination
-from .models import Property
+from .models import Property, Gallery
 
 # from rest_framework.reverse import reverse
 #
@@ -30,6 +31,20 @@ from .models import Property
 #        'users': reverse('users:user-list', request=request, format=format),
 #        'properties': reverse('properties:property-list', request=request, format=format),
 #     })
+
+@api_view(['GET', ])
+def nearby_property_finder(request, current_latitude, current_longitude):
+    user_location = Point(float(current_longitude), float(current_latitude))
+    distance_from_point = {'km': 15}
+    properties = Property.gis.filter(location__distance_lte=(user_location,D(**distance_from_point)))
+    properties = properties.distance(user_location).order_by('distance')
+    if properties.exists(): # count can be expensive in postgres
+        paginator = ResultInPagination()
+        paginated_properties = paginator.paginate_queryset(properties, request)
+        serializer=PropertySerializer(paginated_properties, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    else:
+        return Response({}, status=status.HTTP_200_OK)
 
 class PropertyListView(generics.ListCreateAPIView):
     queryset = Property.objects.all()
@@ -53,19 +68,18 @@ class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
         queryset = self.get_serializer_class().setup_eager_loading(queryset)
         return queryset
 
-@api_view(['GET', ])
-def nearby_property_finder(request, current_latitude, current_longitude):
-    user_location = Point(float(current_longitude), float(current_latitude))
-    distance_from_point = {'km': 15}
-    properties = Property.gis.filter(location__distance_lte=(user_location,D(**distance_from_point)))
-    properties = properties.distance(user_location).order_by('distance')
-    if properties.exists(): # count can be expensive in postgres
-        paginator = ResultInPagination()
-        paginated_properties = paginator.paginate_queryset(properties, request)
-        serializer=PropertySerializer(paginated_properties, many=True)
-        return paginator.get_paginated_response(serializer.data)
-    else:
-        return Response({}, status=status.HTTP_200_OK)
+class PropertyGallery(APIView):
+    serializer_class = GallerySerializer
+    parser_classes = (FormParser, MultiPartParser, )
+    def put(self, request, property_id=None, format=None):
+        _property = get_object_or_404(Property, id=property_id)
+        serializer = self.serializer_class(data=request.data, partial=True)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        else:
+            serializer.save(property_instance=_property)
+            return Response(serializer.data, status= status.HTTP_200_OK)
+            # return Response(data={"msg": serializer.data}, status=status.HTTP_200_OK)
 
 # class PropertyView(APIView):
 #     permission_classes = (IsAuthenticated,) # explicit

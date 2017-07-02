@@ -1,10 +1,11 @@
 import geocoder
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import fromstr
+from django.contrib.gis.geos import Point
 
 from rest_framework import serializers
 
-from .models import PropertyType, Category, Property
+from .models import PropertyType, Category, Property, Gallery
 
 class EagerLoadingMixin:
     @classmethod
@@ -26,9 +27,18 @@ class PropertyTypeSerializer(serializers.ModelSerializer):
         model = PropertyType
         fields = ('id', 'name', )
 
+class GallerySerializer(serializers.ModelSerializer, EagerLoadingMixin):
+    class Meta:
+        model = Gallery
+        fields=('id', 'caption', 'image', )
+
+    def perform_create(self, serializer):
+        serializer.save(property_instance_id=serializer.validated_data['property_id'])
+
 class PropertySerializer(serializers.ModelSerializer, EagerLoadingMixin):
     _SELECT_RELATED_FIELDS = ['owner', ]
-    _PREFETCH_RELATED_FIELDS = ['property_type', ]
+    _PREFETCH_RELATED_FIELDS = ['property_type',]
+    gallery = GallerySerializer(many=True)
     class Meta:
         model = Property
         exclude = ('timestamp', 'prefered_radius', )
@@ -47,4 +57,5 @@ class PropertySerializer(serializers.ModelSerializer, EagerLoadingMixin):
         ret = super(PropertySerializer, self).to_representation(instance)
         pnt = fromstr(ret['location'])
         ret['location'] = {'longitude': pnt.coords[0], 'latitude': pnt.coords[1]}
+        # ret['distance'] = intance.distance.km
         return ret
