@@ -160,3 +160,5 @@ CHANNEL_LAYERS = {
  "ROUTING": "roomFinderApi.routing.channel_routing",
  },
 }
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'

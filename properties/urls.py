@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^property/(?P<property_id>[0-9]*)/$', views.PropertyDetailView.as_view(), name='property-detail'),
     url(r'^nearby_property/(?P<current_latitude>-?\d*.\d*)/(?P<current_longitude>-?\d*.\d*)/$', views.nearby_property_finder, name="nearby-property"),
     url(r'^upload/images/(?P<property_id>[0-9]*)/$', views.PropertyGallery.as_view(), name='property-gallery'),
+    url(r'^property/type/$', views.PropertyTypeListView.as_view(), name='property-type'),
+
 ]
 
 if settings.DEBUG:

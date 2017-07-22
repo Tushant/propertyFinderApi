@@ -19,9 +19,9 @@ from rest_framework import viewsets
 from rest_framework import generics
 from rest_framework import status
 
-from .serializers import PropertySerializer, GallerySerializer
+from .serializers import PropertySerializer, GallerySerializer, PropertyTypeSerializer
 from .utils.pagination import ResultInPagination
-from .models import Property, Gallery
+from .models import Property, Gallery, PropertyType
 
 # from rest_framework.reverse import reverse
 #
@@ -80,6 +80,10 @@ class PropertyGallery(APIView):
             serializer.save(property_instance=_property)
             return Response(serializer.data, status= status.HTTP_200_OK)
             # return Response(data={"msg": serializer.data}, status=status.HTTP_200_OK)
+
+class PropertyTypeListView(generics.ListCreateAPIView):
+    queryset = PropertyType.objects.all()
+    serializer_class = PropertyTypeSerializer
 
 # class PropertyView(APIView):
 #     permission_classes = (IsAuthenticated,) # explicit

@@ -1,0 +1,21 @@
+.notification-fade-enter {
+  opacity: 0;
+  right: 45px;
+}
+
+.notification-fade-enter.notification-fade-enter-active {
+  opacity: 1;
+  right: 0px;
+  transition: 5s ease-in all;
+}
+
+.notification-fade-leave {
+  opacity: 1;
+  right: 0px;
+}
+
+.notification-fade-leave.notification-fade-leave-active {
+  opacity: 0;
+  right: -100px;
+  transition: 5s ease-out all;
+}
