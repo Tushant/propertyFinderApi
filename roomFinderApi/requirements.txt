@@ -37,5 +37,5 @@ sqlparse==0.2.3
 Twisted==17.5.0
 txaio==2.8.0
 uritemplate==3.0.0
-urllib3==1.21.1
+urllib3==1.26.5
 zope.interface==4.4.2
