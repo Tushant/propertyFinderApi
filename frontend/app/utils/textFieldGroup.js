@@ -22,7 +22,7 @@ const TextFieldGroup = ({
 }) => {
   return (
     <div className={classnames('field', { error: error })}>
-      <label htmlFor={name}>
+      <label className="label" htmlFor={name}>
         {label}
       </label>
       <input
