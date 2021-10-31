@@ -15,7 +15,7 @@ class Header extends React.Component {
 	render() {
 		return (
 			<div className="container masthead" style={{ marginTop: '3em', padding: '1em' }}>
-				<h1 style={{ fontSize: '3em' }}>Find Room Per your Needs</h1>
+				<h1 style={{ fontSize: '3em', fontWeight: 600 }}>Find Room Per your Needs</h1>
 			</div>
 		);
 	}
