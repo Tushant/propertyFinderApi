@@ -219,7 +219,7 @@
 		"leaflet": "^1.1.0",
 		"lodash": "4.17.4",
 		"minimist": "1.2.0",
-		"moment": "^2.18.1",
+		"moment": "^2.29.4",
 		"prop-types": "15.5.10",
 		"react": "16.0.0-alpha.13",
 		"react-addons-css-transition-group": "^15.6.0",
